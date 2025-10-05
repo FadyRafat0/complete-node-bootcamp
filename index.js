@@ -1,13 +1,34 @@
+/* 
+    modules
+
+    FILES
+    fs -> file system
+    Syncrhonous
+    fs.readFileSync("path", "encoding") -> return the text from the file synchronous
+    fs.writeFileSync("path", "text") -> overwrite in the file with text
+    Asyncrhonous
+    fs.readFile("path", "encoding", callbackfun(err, data))
+    fs.writeFile("path", "text", "encoding", callbackfun(err))
+
+    --------------------------------------------------------------------------------------------
+    
+*/
+
 const fs = require("fs");
-const { text } = require("stream/consumers");
 
-const textIn = fs.readFileSync("./1-node-farm/starter/txt/input.txt", "utf-8");
+fs.readFile("./1-node-farm/starter/txt/start.txt", "utf-8", (err, data) => {
+  fs.readFile(`./1-node-farm/starter/txt/${data}.txt`, "utf-8", (err, data) => {
+    fs.readFile(
+      `./1-node-farm/starter/txt/append.txt`,
+      "utf-8",
+      (err, data2) => {
+        let combinedData = `${data}\n${data2}`;
+        fs.writeFile("./my_txt", combinedData, "utf-8", (err) => {
+          console.log("Done Writing");
+        });
+      }
+    );
+  });
+});
 
-console.log(textIn);
-
-const textOut = `This Is What We Know About Avocado: ${textIn}\nCreated on ${new Date()}`;
-
-// console.log(textOut);
-
-fs.writeFileSync("./my_txt", textOut);
-console.log("Output Done");
+console.log("Reading Files ...");
